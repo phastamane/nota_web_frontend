@@ -16,7 +16,7 @@ export default function Tarifs() {
         <h1 className="text-5xl font-bold max-xl:text-4xl max-md:text-3xl">Услуги</h1>
       </label>
 
-      <div className="flex justify-self-center mx-auto justify-around min-w-3/4 max-2xl:gap-5 max-xl:flex-col max-xl:items-center">
+      <div className="flex justify-self-center mx-auto justify-around min-w-3/4 gap-10 max-2xl:gap-5 max-xl:flex-col max-xl:items-center">
         {PRICING_PLANS.map((el, i) => (
           <div className={`flex flex-col flex-wrap border-gray-300 border rounded-2xl justify-around w-md min-h-[450px] p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw] ${i > 1 && 'bg-black text-white'}`} key={i}>
             <div className="flex ">

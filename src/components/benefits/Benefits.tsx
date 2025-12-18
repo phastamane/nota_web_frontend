@@ -9,7 +9,7 @@ export default function Benefits(){
 
                     {BENEFIT_IMAGES.map((el, i) => (
 
-                        <div className={`flex justify-around ${i % 2 === 0 ? 'flex-row-reverse' : ''} max-lg:flex-col `}>
+                        <div className={`flex justify-around ${i % 2 === 0 ? 'flex-row-reverse' : ''} max-lg:flex-col `} key={i}>
                             <img className="max-lg:mb-5" src={el.image} alt="" />
                             <div className="flex flex-col gap-[2vh] max-w-1/3 max-lg:max-w-full max-lg:text-center ">
                                 <p className="font-bold text-5xl max-w-xs max-xl:text-4xl max-lg:max-w-full max-md:text-2xl">{el.title}</p>

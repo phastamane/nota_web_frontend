@@ -8,7 +8,7 @@ export default function Functions(){
             <section className="flex flex-col gap-[15vh] items-center max-md:gap-10">
                 <div className="flex flex-col text-center max-w-2/4 justify-self-center gap-[2vh] max-xl: max-w-3/4 max-md:max-w-full max-md:px-2">
                     <h1 className="text-5xl font-bold max-xl:text-4xl max-md:text-3xl ">{FUNC_TITLE.title}</h1>
-                    <p className="text-lg text-gray-500 max-xl:text-base">{nobrRu(FUNC_TITLE.description)}</p>
+                    <p className="w-3/4 mx-auto justify-self-center text-lg text-gray-500 max-xl:text-base">{nobrRu(FUNC_TITLE.description)}</p>
                 </div>
 
                 <div className="flex justify-center gap-10 max-lg:flex-col max-lg:items-center ">

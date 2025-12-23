@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@plugin './hero.ts';
+/* Note: You may need to change the path to fit your project structure */
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+@layer base {
+  @font-face {
+    font-family: "Inter-local";
+    src: local("src/shared/fonts/Inter.ttf") format("truetype");
+    
+  }
+  html {
+    font-family: "Inter-local", system-ui, sans-serif;
+  }
+}
+
+section{margin: 15vh 0;}
+@media(max-width:1024px){
+  section{
+      margin: 10vh 0;
+  }
+
+}

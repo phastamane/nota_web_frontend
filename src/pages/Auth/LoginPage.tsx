@@ -1,23 +1,15 @@
-import { Input } from "@heroui/react"
-import {Button} from "@heroui/react"
-export default function Auth(){
-    
-    
-    async function connect() {
-       const result = await fetch("http://localhost:8000/auth/login", {method: 'POST'})
-       console.log(result)
-    }
 
-    return(
-        <>
-        
-            <div className="grid grid-rows-4 gap-5 mt-10">
-                <h1 className="justify-self-center">Auth</h1>
-                <Input label="Email" type="email" className="max-w-sm justify-self-center"/>
-                <Input label="Enter your password" type="password" className="max-w-sm justify-self-center"/>
-                <Button className="justify-self-center" onClick={connect}>Войти</Button>
-            </div>
+import LoginForm from "../../common/LoginForm";
+export default function Auth() {
 
-        </>
-    )
+  return (
+    <>
+      <div className="h-screen flex h-full items-center justify-center">
+        <div className="flex flex-col gap-10 items-center bg-yellow-300 p-15 rounded-xl">
+            <p className="font-bold text-3xl">Авторизация</p>
+          <LoginForm />
+        </div>
+      </div>
+    </>
+  );
 }

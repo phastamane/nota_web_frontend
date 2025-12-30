@@ -6,4 +6,5 @@ export default class UserService {
   static fetchUser(): Promise<AxiosResponse<IUser>> {
     return api.get<IUser>("users/me");
   }
+
 }

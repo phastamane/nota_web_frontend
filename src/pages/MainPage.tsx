@@ -4,24 +4,37 @@ import Functions from "../components/functions/Functions";
 import Feautures from "../components/features/Features";
 import Benefits from "../components/benefits/Benefits";
 import Tarifs from "../components/tarifs/Tarifs";
-import Footer from "../common/footer/Footer";
+import Footer from "../common/Footer";
 
 export default function MainPage() {
   return (
     <>
-      <section id="hero" className="anchor-section">
+      <section id="hero" className="anchor-section section-spacing">
         <Hero />
       </section>
-      <Clients />
-      <Functions />
-      <Feautures />
-      <section id="benefits">
+
+      <section className="section-spacing">
+        <Clients />
+      </section>
+
+      <section className="section-spacing">
+        <Functions />
+      </section>
+
+      <section className="section-spacing">
+        <Feautures />
+      </section>
+
+      <section id="benefits" className="section-spacing">
         <Benefits />
       </section>
-      <section id="pricing" className="anchor-section">
+
+      <section id="pricing" className="anchor-section section-spacing">
         <Tarifs />
       </section>
+
       <Footer />
     </>
   );
 }
+

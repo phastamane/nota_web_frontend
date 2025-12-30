@@ -2,52 +2,58 @@
 import { HeroUIProvider } from "@heroui/react";
 import { Routes, Route } from "react-router";
 import { ReactLenis } from "lenis/react";
-import NavBar from "../common/NavBar";
+import PublicLayout from "../common/PublicLayout";
 import MainLayout from "../common/MainLayout";
 import MainPage from "../pages/MainPage";
-import Auth from "../pages/Auth/LoginPage";
+import Auth from "../pages/Auth/Auth";
 import { Swagger } from "../Swagger";
-import { useEffect } from "react";
-import useMe from "../hooks/useMe";
-import { useAuthStore } from "../store/useAuthStore";
+import useAuthBootstrap from "../hooks/useAuthBootstrap";
 import AccountPage from "../pages/account/Account";
 import PrivateRoute from "./PrivateRoute";
-// import NotFound from "../pages/NotFound";
+import PublicRoute from "./PublicRoute";
 
 export default function App() {
-  const token = localStorage.getItem("access_token");
-  const { data: me, isError } = useMe(!!token);
+  const { isLoading, token } = useAuthBootstrap();
 
-  useEffect(() => {
-    if (me) useAuthStore.getState().setUser(me);
-    if (isError) {
-      localStorage.removeItem("access_token");
-      useAuthStore.getState().logout();
-    }
-  }, [me, isError]);
+  if (token && isLoading) return null;
 
   return (
     <HeroUIProvider>
-      <NavBar />
-      <ReactLenis root options={{ anchors: true }}>
-        <Routes>
-          <Route path="/swagger" element={<Swagger />}></Route>
+      <Routes>
+        <Route element={<PublicLayout />}>
           <Route element={<MainLayout />}>
             <Route index element={<MainPage />} />
-            <Route path="/login" element={<Auth />} />
-            <Route path="/register" element={<Auth />} />
-            <Route
-              path="/account"
-              element={
-                <PrivateRoute>
-                  <AccountPage />
-                </PrivateRoute>
-              }
-            />
-            {/* <Route path="*" element={<NotFound />} /> */}
           </Route>
-        </Routes>
-      </ReactLenis>
+        </Route>
+
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Auth mode='login'/>
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Auth mode="register" />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/account"
+          element={
+            <PrivateRoute>
+              <AccountPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="/swagger" element={<Swagger />} />
+      </Routes>
     </HeroUIProvider>
   );
 }

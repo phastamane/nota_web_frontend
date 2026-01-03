@@ -9,9 +9,12 @@ import {
 } from "../../schemas/UserInput";
 import { useRegister } from "@/hooks/useRegister";
 
+
+
 export default function RegisterForm() {
   const { register, error } = useRegister();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  
 
   const {
     control,
@@ -19,6 +22,7 @@ export default function RegisterForm() {
     formState: { errors, isSubmitting },
   } = useForm<UserRegistrationInput>({
     resolver: zodResolver(UserRegitrationSchema),
+    shouldUnregister: true,
     defaultValues: {
       username: "",
       first_name: "",
@@ -26,17 +30,14 @@ export default function RegisterForm() {
       phone_number: "",
       password: "",
       role: "customer",
-      license_number: "",
-      inn: "",
-      description: "",
     },
   });
   const selectedRole = useWatch({ control, name: "role" });
-
   return (
     <form
       className="w-full max-w-xs flex flex-col gap-4"
-      onSubmit={handleSubmit(register)}
+     onSubmit={handleSubmit(register)}
+
     >
       <Controller
         name="username"
@@ -150,8 +151,7 @@ export default function RegisterForm() {
                 {...field}
                 label="Номер лицензии"
                 labelPlacement="outside"
-                isInvalid={!!errors.license_number}
-                errorMessage={errors.license_number?.message}
+
               />
             )}
           />
@@ -164,8 +164,7 @@ export default function RegisterForm() {
                 {...field}
                 label="ИНН"
                 labelPlacement="outside"
-                isInvalid={!!errors.inn}
-                errorMessage={errors.inn?.message}
+
               />
             )}
           />
@@ -178,8 +177,7 @@ export default function RegisterForm() {
                 {...field}
                 label="Описание"
                 labelPlacement="outside"
-                isInvalid={!!errors.description}
-                errorMessage={errors.description?.message}
+
               />
             )}
           />
@@ -190,6 +188,7 @@ export default function RegisterForm() {
         type="submit"
         isLoading={isSubmitting}
         className="bg-[#ffba00]"
+
       >
         Зарегистрироваться
       </Button>

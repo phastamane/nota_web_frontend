@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
 import NavBar from "../components/ui/navbar/NavBar";
 

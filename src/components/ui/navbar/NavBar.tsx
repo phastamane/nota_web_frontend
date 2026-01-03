@@ -10,7 +10,7 @@ import {
   Link as LinkUI
 } from "@heroui/react";
 import { useScrollToSection } from "../../../hooks/useScrollToSection";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { NAV_ITEMS } from "./nav.constants";
 import { NavAuth } from "./NavAuth";
 

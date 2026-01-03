@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import UserService from "../services/UserService";
+import UserService from "../services/ProfileService";
 
 function useUser(enabled: boolean) {
   

@@ -1,18 +1,29 @@
 import React, { useState } from "react";
 import {Form, Input, Button} from "@heroui/react";
 import AuthService from "../../services/AuthService";
-import UserService from "../../services/UserService";
+import UserService from "../../services/ProfileService";
 import { useAuthStore } from "../../store/useAuthStore";
-import { useNavigate } from "react-router";
 import { EyeIcon, EyeOffIcon } from "../../shared/Icons";
+import api from "@/http";
+import type { ICustomer } from "@/types/ICustomer";
+import type { INotary } from "@/types/INotary";
+
+async function getProfileByRole(role: string) {
+  if (role === "customer" || role === "admin") {
+    return await api.get<ICustomer>("customers/me");
+  }
+  if (role === "notary") {
+    return await api.get<INotary>("notaries/me");
+  }
+  return null;
+}
 
 export default function LoginForm() {
-  const navigate = useNavigate()
-
   const [error, setError] = useState<string | null>(null)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const setUser = useAuthStore((s) => s.setUser)
   const setCustomer = useAuthStore((s) => s.setCustomer)
+  const setNotary = useAuthStore((s) => s.setNotary)
 
   const togglePasswordVisibility = () => setIsPasswordVisible((v) => !v)
 
@@ -29,7 +40,14 @@ export default function LoginForm() {
 
       const user = await UserService.fetchUser()
       setUser(user.data)
-      navigate('/account')
+      const profileRes = await getProfileByRole(user.data.role)
+      if (profileRes?.data) {
+        if (user.data.role === "notary") {
+          setNotary(profileRes.data as INotary)
+        } else {
+          setCustomer(profileRes.data as ICustomer)
+        }
+      }
       
       
     } catch (error) {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useUser from "./useUser";
-import getUserByRole from "../services/GetUserByRole";
+import api from "@/http/index";
 import { useAuthStore } from "../store/useAuthStore";
 import type { ICustomer } from "../types/ICustomer";
 import type { INotary } from "../types/INotary";
@@ -10,6 +10,15 @@ function isNotaryProfile(profile: ICustomer | INotary): profile is INotary {
   return "license_number" in profile;
 }
 
+async function getUserByRole(role: string) {
+  if (role === "customer" || role === "admin") {
+    return await api.get<ICustomer>("customers/me");
+  }
+  if (role === "notary") {
+    return await api.get<INotary>("notaries/me");
+  }
+  return null;
+}
 export default function useAuthBootstrap() {
   const token = localStorage.getItem("access_token");
   const { data: user, isError, isLoading } = useUser(!!token);
@@ -37,7 +46,10 @@ export default function useAuthBootstrap() {
       localStorage.removeItem("access_token");
       useAuthStore.getState().logout();
     }
-  }, [user, profile, isError]);
+    if (!token || !isLoading) {
+      useAuthStore.getState().setAuthReady(true);
+    }
+  }, [user, profile, isError, token, isLoading]);
 
   return { isLoading, token };
 }

@@ -1,6 +1,6 @@
 // src/App.tsx
 import { HeroUIProvider } from "@heroui/react";
-import { Routes, Route } from "react-router";
+import { Routes, Route } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
 import PublicLayout from "../common/PublicLayout";
 import MainLayout from "../common/MainLayout";

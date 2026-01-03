@@ -14,7 +14,7 @@ function useLogout() {
       console.error(error);
     } finally {
       clearStore();
-      navigate("/", { replace: true });
+       window.location.replace("/");
     }
   };
 }

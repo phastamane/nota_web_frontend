@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import useUser from "./useUser";
 import api from "@/http/index";
 import { useAuthStore } from "../store/useAuthStore";
-import type { ICustomer } from "../types/ICustomer";
-import type { INotary } from "../types/INotary";
+import type { ICustomer } from "../types/pofile/ICustomer";
+import type { INotary } from "../types/pofile/INotary";
 
 function isNotaryProfile(profile: ICustomer | INotary): profile is INotary {
   return "license_number" in profile;

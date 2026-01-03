@@ -1,9 +1,11 @@
+import { useServices } from "@/hooks/useServices";
 import { nobrRu } from "../../utils/typography";
-import { PRICING_PLANS } from "./tarifs.constants";
+import { PRICING_PLANS } from "./services.constants";
 import { Button } from "@heroui/button";
 
-export default function Tarifs() {
+export default function Services() {
 
+  const {categories} = useServices()
     const stylesOfButtons = [
         'bg-transparant border border-gray-300 focus:border-[#ffc322] hover:bg-white/100 hover:border-[#ffc322] hover:text-[#ffc322] hover:bg-white',
         'bg-[#ffc322] border border-[#ffff22] text-white focus:border-[#fffff] hover:border-[#fffff]',
@@ -17,11 +19,10 @@ export default function Tarifs() {
       </label>
 
       <div className="flex justify-self-center mx-auto justify-around min-w-3/4 gap-10 max-2xl:gap-5 max-xl:flex-col max-xl:items-center">
-        {PRICING_PLANS.map((el, i) => (
+        {categories.map((el, i) => (
           <div className={`flex flex-col flex-wrap border-gray-300 border rounded-2xl justify-around w-md min-h-[450px] p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw] ${i > 1 && 'bg-black text-white'}`} key={i}>
             <div className="flex ">
-              {el.icon}
-              <p className="pl-4 ">{el.label}</p>
+              <p className="pl-4 ">{el.name}</p>
             </div>
 
             <div className="flex flex-col">

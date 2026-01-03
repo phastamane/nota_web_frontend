@@ -3,6 +3,7 @@ import type { JSX } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 import React from "react";
+import { ToastProvider } from "@heroui/react";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const isAuth = useAuthStore((s) => s.isAuth);
@@ -12,7 +13,12 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
   if (!isAuth) {
    return <Navigate to="/login" replace />;
   }
-  else return children;
+  else return (
+    <>
+      <ToastProvider/>  
+      {children}
+    </>
+  );
 }
 
 export default PrivateRoute;

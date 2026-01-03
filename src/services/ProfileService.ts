@@ -1,7 +1,7 @@
 import type { AxiosResponse } from "axios";
 import api from "../http";
-import type { IUser } from "../types/IUser";
-import type { INotary } from "@/types/INotary";
+import type { IUser } from "../types/pofile/IUser";
+import type { INotary } from "@/types/pofile/INotary";
 
 export default class ProfileService {
   static fetchUser(): Promise<AxiosResponse<IUser>> {

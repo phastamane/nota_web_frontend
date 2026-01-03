@@ -11,9 +11,12 @@ import useAuthBootstrap from "../hooks/useAuthBootstrap";
 import AccountPage from "../pages/account/Account";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import { useAuthStore } from "@/store/useAuthStore";
+import AdminAccount from "@/pages/account/AdminAccount";
 
 export default function App() {
   const { isLoading, token } = useAuthBootstrap();
+  const user = useAuthStore((s) => s.user)
 
   if (token && isLoading) return null;
 
@@ -47,7 +50,7 @@ export default function App() {
           path="/account"
           element={
             <PrivateRoute>
-              <AccountPage />
+              {user?.role !== 'admin' ? <AccountPage /> : <AdminAccount/>}
             </PrivateRoute>
           }
         />

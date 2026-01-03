@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import type { IUser } from "../types/IUser";
-import type { ICustomer } from "../types/ICustomer";
-import type { INotary } from "@/types/INotary";
+import type { IUser } from "../types/pofile/IUser";
+import type { ICustomer } from "../types/pofile/ICustomer";
+import type { INotary } from "@/types/pofile/INotary";
 
 type Store = {
   user: IUser | null;

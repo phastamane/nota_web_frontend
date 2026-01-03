@@ -1,6 +1,6 @@
 
-import LoginForm from "../../components/ui/LoginForm";
-import RegisterForm from "../../components/ui/RegisterForm";
+import LoginForm from "../../components/ui/forms/LoginForm";
+import RegisterForm from "../../components/ui/forms/RegisterForm";
 export default function Auth({mode}: {mode: 'login' | 'register'}) {
 
   if (mode === 'login') {

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input, Button, Select, SelectItem } from "@heroui/react";
-import { EyeIcon, EyeOffIcon } from "../../shared/Icons";
+import { EyeIcon, EyeOffIcon } from "../../../shared/Icons";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UserRegitrationSchema,
   type UserRegistrationInput,
-} from "../../schemas/UserInput";
+} from "../../../schemas/UserInput";
 import { useRegister } from "@/hooks/useRegister";
 
 
@@ -134,7 +134,7 @@ export default function RegisterForm() {
             isInvalid={!!errors.role}
             errorMessage={errors.role?.message}
           >
-            <SelectItem key="customer">Пользователь</SelectItem>
+            <SelectItem key="0">Пользователь</SelectItem>
             <SelectItem key="notary">Нотариус</SelectItem>
             <SelectItem key="admin">Администратор</SelectItem>
           </Select>

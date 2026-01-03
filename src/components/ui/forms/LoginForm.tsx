@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {Form, Input, Button} from "@heroui/react";
-import AuthService from "../../services/AuthService";
-import UserService from "../../services/ProfileService";
-import { useAuthStore } from "../../store/useAuthStore";
-import { EyeIcon, EyeOffIcon } from "../../shared/Icons";
+import AuthService from "../../../services/AuthService";
+import UserService from "../../../services/ProfileService";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { EyeIcon, EyeOffIcon } from "../../../shared/Icons";
 import api from "@/http";
-import type { ICustomer } from "@/types/ICustomer";
-import type { INotary } from "@/types/INotary";
+import type { ICustomer } from "@/types/pofile/ICustomer";
+import type { INotary } from "@/types/pofile/INotary";
 
 async function getProfileByRole(role: string) {
   if (role === "customer" || role === "admin") {

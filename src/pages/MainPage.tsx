@@ -3,8 +3,8 @@ import Clients from "../components/clients/Clients";
 import Functions from "../components/functions/Functions";
 import Feautures from "../components/features/Features";
 import Benefits from "../components/benefits/Benefits";
-import Tarifs from "../components/tarifs/Tarifs";
 import Footer from "../common/Footer";
+import Services from "../components/services/Services";
 
 export default function MainPage() {
   return (
@@ -30,7 +30,7 @@ export default function MainPage() {
       </section>
 
       <section id="pricing" className="anchor-section section-spacing">
-        <Tarifs />
+        <Services />
       </section>
 
       <Footer />

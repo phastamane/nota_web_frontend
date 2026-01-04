@@ -1,22 +1,25 @@
-import { useServices } from "@/hooks/useServices";
+import { useServicesCat } from "@/hooks/useServicesCat";
 import {
-  ServicesCategoriesSchema,
-  type ServicesCategoriesInput,
+  ServicesCatSchema,
+  type ServicesCatInput,
 } from "@/schemas/ServicesInput";
-import { Services } from "@/services/Services";
-import type { ServicesCategoriesInterface } from "@/types/Services";
-import { Select, SelectItem, Input, Button, addToast } from "@heroui/react";
+
+import { Select, SelectItem, Input, Button } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
-export default function ServicesCategoriesForm() {
-  const { sendServiceCategories, categories, error } = useServices();
+type ServicesCatFormProps = {
+  onSuccess?: () => void;
+};
+
+export default function AddServicesCatForm({ onSuccess }: ServicesCatFormProps) {
+  const { sendServiceCategories, categories } = useServicesCat();
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ServicesCategoriesInput>({
-    resolver: zodResolver(ServicesCategoriesSchema),
+  } = useForm<ServicesCatInput>({
+    resolver: zodResolver(ServicesCatSchema),
     defaultValues: {
       name: "",
       parent_id: null,
@@ -24,7 +27,12 @@ export default function ServicesCategoriesForm() {
   });
 
   return (
-    <form onSubmit={handleSubmit(sendServiceCategories)}>
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        await sendServiceCategories(data);
+        onSuccess?.();
+      })}
+    >
       <Controller
         name="name"
         control={control}
@@ -60,11 +68,7 @@ export default function ServicesCategoriesForm() {
         )}
       />
 
-      <Button
-        type={"submit"}
-        isLoading={isSubmitting}
-        className="bg-[#ffba00]"
-      >
+      <Button type={"submit"} isLoading={isSubmitting} className="bg-[#ffba00]">
         Создать категорию
       </Button>
     </form>

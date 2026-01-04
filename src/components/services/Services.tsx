@@ -1,16 +1,13 @@
-import { useServices } from "@/hooks/useServices";
-import { nobrRu } from "../../utils/typography";
-import { PRICING_PLANS } from "./services.constants";
+import { useServicesCat } from "@/hooks/useServicesCat";
 import { Button } from "@heroui/button";
+import AddServiceModal from "../AddServiceModal";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Services() {
 
-  const {categories} = useServices()
-    const stylesOfButtons = [
-        'bg-transparant border border-gray-300 focus:border-[#ffc322] hover:bg-white/100 hover:border-[#ffc322] hover:text-[#ffc322] hover:bg-white',
-        'bg-[#ffc322] border border-[#ffff22] text-white focus:border-[#fffff] hover:border-[#fffff]',
-        'bg-white border border-gray-300 text-black focus:border-[#fffff] hover:border-[#00000] hover:text-white hover:bg-black'
-     ]
+  const {categories} = useServicesCat()
+
+     const userRole = useAuthStore((s) => s.user?.role)
 
   return (
     <section className="flex flex-col gap-20 max-md:gap-10 ">
@@ -20,30 +17,26 @@ export default function Services() {
 
       <div className="flex justify-self-center mx-auto justify-around min-w-3/4 gap-10 max-2xl:gap-5 max-xl:flex-col max-xl:items-center">
         {categories.map((el, i) => (
-          <div className={`flex flex-col flex-wrap border-gray-300 border rounded-2xl justify-around w-md min-h-[450px] p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw] ${i > 1 && 'bg-black text-white'}`} key={i}>
-            <div className="flex ">
-              <p className="pl-4 ">{el.name}</p>
-            </div>
+          <div key={el.id} className="min-h-[450px]">
+            <div className="flex flex-col flex-wrap border-gray-300 border rounded-2xl w-md  p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw]"  key={i}>
+                <p className="mx-auto text-2xl font-semibold">{el.name}</p>
+                {el.services.length > 0 &&
+                  el.services.map((service) => (
 
-            <div className="flex flex-col">
-              <p className="text-4xl mb-8 max-2xl:text-3xl max-xl:text-2xl"><strong>{nobrRu(el.title)}</strong></p>
-              <p className='text-gray-400 max-md:text-sm'>{el.subtitle}</p>
+                    <div key={service.title} className="flex gap-2 border rounded-xl p-4">
+                      <div className="flex flex-col">
+                        <p>{service.title}</p>
+                        <p>{service.description}</p>
+                      </div>
+                      <span>
+                        <p className="ml-auto">{`Цена: ${service.price} ₽`}</p>
+                        {userRole !== 'admin' && userRole !== 'notary'&& <Button size={'sm'} color="success">Заказать</Button>}
+                      </span>
+                    </div>
+                  ))
+                }
+                <AddServiceModal name={el.name} parent_id={el.parent_id}/>
             </div>
-
-            <div className="flex flex-col border-2 border-gray-300 max-w-95 p-4 gap-2 rounded-2xl max-2xl:p-3">
-              <span className="flex gap-1 text-center max-md:text-sm">
-                <strong>{el.flatLicense}</strong>
-                <p className="text-gray-500 ">{el.license}</p>
-              </span>
-              <span className="flex gap-1 text-center max-2xl:text-base max-md:text-sm">
-                <strong>{el.flatRate}</strong>
-                <p className="text-gray-500 max-2xl:text-base max-md:text-sm">{nobrRu(el.rate)}</p>
-              </span>
-            </div>
-
-            <Button  className = {`${stylesOfButtons[i]}`}>
-              <strong>{el.cta}</strong>
-            </Button>
           </div>
         ))}
       </div>

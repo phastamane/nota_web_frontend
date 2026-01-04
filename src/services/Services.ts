@@ -1,16 +1,18 @@
 import api from "@/http";
 import type {
-  ServicesCategoriesInterface,
+  CreateServiceCatDto,
+  CreateServiceDto,
+  ServicesCatInterface,
   ServicesInterface,
 } from "@/types/Services";
 import type { AxiosResponse } from "axios";
 
 export class Services {
 
-  static create(
-    payload: ServicesCategoriesInterface
-  ): Promise<AxiosResponse<ServicesCategoriesInterface>> {
-    return api.post<ServicesCategoriesInterface>(
+  static createCategory(
+    payload: CreateServiceCatDto
+  ): Promise<AxiosResponse<CreateServiceCatDto>> {
+    return api.post<CreateServiceCatDto>(
       "services_categories/",
       payload,
       {
@@ -20,6 +22,12 @@ export class Services {
   }
 
   static getCategories(){
-    return api.get<ServicesInterface[]>('services_categories/')
+    return api.get<ServicesCatInterface[]>('services_categories/')
   }
+
+  static createService(payload: CreateServiceDto): Promise<AxiosResponse<CreateServiceDto>>{
+    return api.post<CreateServiceDto>("services/", payload)
+  }
+
+
 }

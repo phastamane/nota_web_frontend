@@ -4,6 +4,7 @@ import AddServiceModal from "../AddServiceModal";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useService } from "@/hooks/useService";
 import BookingForm from "../ui/forms/BookingForm";
+import { Divider } from "@heroui/react";
 
 export default function Services() {
   const { categories, deleteCategories } = useServicesCat();
@@ -30,46 +31,53 @@ export default function Services() {
           <div key={category.id} className="min-h-[450px]">
             
             <div
-              className="flex flex-col flex-wrap border-gray-300 border rounded-2xl w-md  p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw]"
+              className="flex flex-col flex-wrap border-gray-300 border rounded-2xl w-lg gap-5 p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw]"
               key={i}
             >
-              {userRole === 'admin' && 
-            <>
-              <AddServiceModal
-                type="category"
-                mode="edit"
-                initialData={{
-                  id: category.id,
-                  name: category.name,
-                  parent_id: category.parent_id
-                }}
-                trigger={
-                  <Button size="sm" color="warning">
-                    Изменить
-                  </Button>
-                }
-              />
-              <Button
-                size="sm"
-                color="danger"
-                onPress={() => deleteCategories(category.id)}
-              >
-                Удалить
-              </Button>
-            </>}
-              <p className="mx-auto text-2xl font-semibold">{category.name}</p>
+              <div className="flex items-center text-center">
+                <p className="mx-auto text-2xl font-semibold">{category.name}</p>
+  
+                {userRole === 'admin' && 
+              <div className="flex gap-2 ">
+                <AddServiceModal
+                  type="category"
+                  mode="edit"
+                  initialData={{
+                    id: category.id,
+                    name: category.name,
+                    parent_id: category.parent_id
+                  }}
+                  trigger={
+                    <Button size="sm" color="warning">
+                      Изменить
+                    </Button>
+                  }
+                />
+                <Button
+                  size="sm"
+                  color="danger"
+                  onPress={() => deleteCategories(category.id)}
+                >
+                  Удалить
+                </Button>
+              
+            </div>}
+            </div>
               {category.services.length > 0 &&
                 category.services.map((service) => (
                   <div
                     key={service.title}
-                    className="flex gap-2 border rounded-xl p-4"
+                    className="flex gap-2 border rounded-xl p-5"
                   >
                     <div className="flex flex-col">
-                      <p>{service.title}</p>
+                      <p className="font-semibold">{service.title}</p>
+                       <Divider className="my-2" />
                       <p>{service.description}</p>
                     </div>
-                    <span>
-                      <p className="ml-auto">{`Цена: ${service.price} ₽`}</p>
+                    
+                    <span className="flex flex-col gap-2 border-gray-200 border-l-1 px-2 ml-auto">
+                      <p className="font-semibold pb-1 whitespace-nowrap">{`${service.price} ₽`}</p>
+                     
                       {userRole !== "admin" && userRole !== "notary" && (
                         <BookingForm
                           serviceId={service.id}

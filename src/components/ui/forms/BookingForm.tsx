@@ -18,7 +18,6 @@ import type { ServicesCatInterface } from "@/types/Services";
 
 type TriggerProps = {
   onPress?: (e: React.SyntheticEvent) => void;
-  onClick?: (e: React.SyntheticEvent) => void;
 };
 
 interface BookingFormProps {
@@ -33,7 +32,7 @@ export default function BookingForm({
   notaryProfileId,
 }: BookingFormProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { createBooking } = useBooking();
+  const { createBooking, dowloadReceipt } = useBooking();
 
   const {
     control,
@@ -44,13 +43,14 @@ export default function BookingForm({
     resolver: zodResolver(BookingSchema),
     defaultValues: {
       service_id: serviceId ?? 0,
-      notary_profile_id: notaryProfileId ?? 1,
+      notary_profile_id: notaryProfileId ?? undefined,
     },
   });
-  const categories: ServicesCatInterface[] = [];
+  const {notariesList} = useBooking()
 
   const onSubmit = async (data: BookingInput) => {
     await createBooking(data);
+    dowloadReceipt()
   };
 
   const triggerElement =
@@ -59,11 +59,7 @@ export default function BookingForm({
           onPress: (e) => {
             trigger.props.onPress?.(e);
             onOpen();
-          },
-          onClick: (e) => {
-            trigger.props.onClick?.(e);
-            onOpen();
-          },
+          }
         })
       : trigger;
 
@@ -93,7 +89,7 @@ export default function BookingForm({
                     control={control}
                     render={({ field }) => (
                       <Select
-                        label="Родительская категория"
+                        label="Выберите нотариуса"
                         labelPlacement="outside"
                         selectedKeys={
                           field.value !== null ? [String(field.value)] : []
@@ -105,9 +101,9 @@ export default function BookingForm({
                         isInvalid={!!errors.notary_profile_id}
                         errorMessage={errors.notary_profile_id?.message}
                       >
-                        {categories.map((cat) => (
-                          <SelectItem key={String(cat.id)}>
-                            {cat.name}
+                        {notariesList.map((notary) => (
+                          <SelectItem key={String(notary.id)}>
+                            {`${notary.first_name} ${notary.last_name}`}
                           </SelectItem>
                         ))}
                       </Select>

@@ -11,7 +11,7 @@ export type ServicesCatInput = z.infer<typeof ServicesCatSchema>
 export const ServicesSchema = z.object({
     title: z.string().min(1, "Имя не может быть пустым"),
     description:  z.string().min(1, "Описание не может быть пустым"),
-    price: z.number().int().positive(),
+    price: z.number().int().positive().nonnegative(),
     category_id: z.number().int().positive().nullable(),
 })
 

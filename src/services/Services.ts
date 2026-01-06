@@ -1,32 +1,29 @@
 import api from "@/http";
 import type {
-  CreateServiceCatDto,
+
   CreateServiceDto,
-  ServicesCatInterface,
   ServicesInterface,
+  UpdateServiceDto,
+
 } from "@/types/Services";
 import type { AxiosResponse } from "axios";
 
 export class Services {
 
-  static createCategory(
-    payload: CreateServiceCatDto
-  ): Promise<AxiosResponse<CreateServiceCatDto>> {
-    return api.post<CreateServiceCatDto>(
-      "services_categories/",
-      payload,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-
-  static getCategories(){
-    return api.get<ServicesCatInterface[]>('services_categories/')
-  }
-
   static createService(payload: CreateServiceDto): Promise<AxiosResponse<CreateServiceDto>>{
     return api.post<CreateServiceDto>("services/", payload)
+  }
+
+  static updateService(payload: UpdateServiceDto): Promise<AxiosResponse<UpdateServiceDto>>{
+    return api.patch<UpdateServiceDto>(`services/${payload.id}`, payload)
+  }
+
+  static deleteServiсe(id: number){
+    return api.delete(`services/${id}`)
+  }
+
+  static getServices(id: number){
+    return api.get<ServicesInterface>(`services/${id}`)
   }
 
 

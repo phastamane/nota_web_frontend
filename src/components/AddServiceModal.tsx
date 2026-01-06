@@ -6,39 +6,91 @@ import {
   Button,
   useDisclosure,
 } from "@heroui/react";
+import React from "react";
 import AddServiceForm from "./ui/forms/AddServiceForm";
-import { useAuthStore } from "@/store/useAuthStore";
 import AddServicesCatForm from "./ui/forms/AddServicesCatForm";
+import { PlusIcon } from "@/shared/Icons";
 
-type AddServiceModalProps = {
-  name: string;
-  parent_id: number | null;
+type ModalMode = "create" | "edit";
+type EntityType = "service" | "category";
+
+type TriggerProps = {
+  onPress?: (e: React.SyntheticEvent) => void;
+  onClick?: (e: React.SyntheticEvent) => void;
 };
 
-export default function AddServiceModal({ name }: AddServiceModalProps) {
-  const userRole = useAuthStore((s) => s.user?.role);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  return (
+interface ServiceModalProps {
+  type: EntityType;
+  mode: ModalMode;
+  trigger?: React.ReactNode;
+  initialData?: any;
+}
+
+export default function AddServiceModal({type, mode, trigger, initialData} : ServiceModalProps) {
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const titleMap = {
+    service: {
+      create: "Добавить услугу",
+      edit: "Изменить услугу",
+    },
+    category: {
+      create: "Добавить категорию",
+      edit: "Изменить категорию",
+    },
+  };
+
+
+const triggerElement =
+  trigger && React.isValidElement<TriggerProps>(trigger)
+    ? React.cloneElement<TriggerProps>(trigger, {
+        onPress: (e) => {
+          trigger.props.onPress?.(e);
+          onOpen();
+        },
+        onClick: (e) => {
+          trigger.props.onClick?.(e);
+          onOpen();
+        },
+      })
+    : trigger;
+
+
+
+ return (
     <>
-      {userRole === "notary" && 
-      <Button
-        className={
-          "bg-transparant border border-gray-300 focus:border-[#ffc322] hover:bg-white/100 hover:border-[#ffc322] hover:text-[#ffc322] hover:bg-white"
-        }
-        onPress={onOpen}
-      >
-        Добавить услугу
-      </Button>}
+      {trigger ? (
+        triggerElement
+      ) : (
+        <Button onPress={onOpen} startContent={<PlusIcon />}>
+          {titleMap[type][mode]}
+        </Button>
+      )}
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">{name}</ModalHeader>
+              <ModalHeader>
+                {titleMap[type][mode]}
+              </ModalHeader>
+
               <ModalBody>
-                {userRole === "admin" ? (
-                  <AddServicesCatForm />
-                ) : (
-                  <AddServiceForm onSuccess={onClose} />
+                {type === "category" && (
+                  <AddServicesCatForm
+                    mode={mode}
+                    initialData={initialData}
+                    onSuccess={onClose}
+                  />
+                )}
+
+                {type === "service" && (
+                  <AddServiceForm
+                    mode={mode}
+                    initialData={initialData}
+                    onSuccess={onClose}
+                  />
                 )}
               </ModalBody>
             </>

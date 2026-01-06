@@ -1,22 +1,40 @@
+import { useEffect } from "react";
 import { useService } from "@/hooks/useService";
 import { useServicesCat } from "@/hooks/useServicesCat";
 import {
   ServicesSchema,
   type ServicesSchemaInput,
 } from "@/schemas/ServicesInput";
-import { useAuthStore } from "@/store/useAuthStore";
 import { Input, Select, SelectItem, Button } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
+type Mode = "create" | "edit";
+
 type AddServiceFormProps = {
+  mode: Mode;
+  initialData?: {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    category_id: number;
+  };
   onSuccess?: () => void;
 };
 
-export default function AddServiceForm({ onSuccess }: AddServiceFormProps) {
+export default function AddServiceForm({
+  mode,
+  initialData,
+  onSuccess,
+}: AddServiceFormProps) {
+  const { createService, updateService } = useService();
+  const { categories } = useServicesCat();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ServicesSchemaInput>({
     resolver: zodResolver(ServicesSchema),
@@ -24,20 +42,43 @@ export default function AddServiceForm({ onSuccess }: AddServiceFormProps) {
       title: "",
       description: "",
       price: 0,
-      category_id: null,
+      category_id: 0,
     },
   });
 
-  const { createServise } = useService();
-  const { categories } = useServicesCat();
+  // 🔹 Prefill при edit
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      reset({
+        title: initialData.title,
+        description: initialData.description,
+        price: initialData.price,
+        category_id: initialData.category_id,
+      });
+    }
+  }, [mode, initialData, reset]);
+
+  const onSubmit = async (data: ServicesSchemaInput) => {
+    if (mode === "create") {
+      await createService(data);
+    }
+
+    if (mode === "edit" && initialData) {
+      await updateService({
+        id: initialData.id,
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        category_id: data.category_id,
+      });
+    }
+
+    onSuccess?.();
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(async (data) => {
-        await createServise(data);
-        onSuccess?.();
-      })}
-    >
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+      {/* TITLE */}
       <Controller
         name="title"
         control={control}
@@ -52,6 +93,7 @@ export default function AddServiceForm({ onSuccess }: AddServiceFormProps) {
         )}
       />
 
+      {/* DESCRIPTION */}
       <Controller
         name="description"
         control={control}
@@ -66,26 +108,27 @@ export default function AddServiceForm({ onSuccess }: AddServiceFormProps) {
         )}
       />
 
+      {/* PRICE */}
       <Controller
         name="price"
         control={control}
         render={({ field }) => (
           <Input
-            {...field}
             label="Цена услуги"
             labelPlacement="outside"
+            type="number"
             isInvalid={!!errors.price}
             errorMessage={errors.price?.message}
-            type="number"
-            value={field.value === 0 ? "0" : field.value ? String(field.value) : ""}
-            onChange={(event) => {
-              const rawValue = event.target.value;
-              field.onChange(rawValue === "" ? 0 : Number(rawValue));
+            value={field.value === 0 ? "" : String(field.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(value === "" ? 0 : Number(value));
             }}
           />
         )}
       />
 
+      {/* CATEGORY */}
       <Controller
         name="category_id"
         control={control}
@@ -93,22 +136,31 @@ export default function AddServiceForm({ onSuccess }: AddServiceFormProps) {
           <Select
             label="Категория"
             labelPlacement="outside"
-            selectedKeys={field.value !== null ? [String(field.value)] : []}
-            items={categories}
+            selectedKeys={
+              field.value ? [String(field.value)] : []
+            }
             onSelectionChange={(keys) => {
               const value = Array.from(keys)[0];
-              field.onChange(value ? Number(value) : null);
+              field.onChange(value ? Number(value) : 0);
             }}
             isInvalid={!!errors.category_id}
             errorMessage={errors.category_id?.message}
           >
-            {(cat) => <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>}
+            {categories.map((cat) => (
+              <SelectItem key={String(cat.id)}>
+                {cat.name}
+              </SelectItem>
+            ))}
           </Select>
         )}
-        
       />
-      <Button type={"submit"} isLoading={isSubmitting} className="bg-[#ffba00]">
-        Создать услугу
+
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
+        className="bg-[#ffba00]"
+      >
+        {mode === "create" ? "Создать услугу" : "Сохранить изменения"}
       </Button>
     </form>
   );

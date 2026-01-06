@@ -2,40 +2,115 @@ import { useServicesCat } from "@/hooks/useServicesCat";
 import { Button } from "@heroui/button";
 import AddServiceModal from "../AddServiceModal";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useService } from "@/hooks/useService";
+import BookingForm from "../ui/forms/BookingForm";
 
 export default function Services() {
+  const { categories, deleteCategories } = useServicesCat();
+  const { deleteService } = useService();
 
-  const {categories} = useServicesCat()
-
-     const userRole = useAuthStore((s) => s.user?.role)
+  const userRole = useAuthStore((s) => s.user?.role);
 
   return (
-    <section className="flex flex-col gap-20 max-md:gap-10 ">
-      <label className = 'align-self-center mx-auto' htmlFor="">
-        <h1 className="text-5xl font-bold max-xl:text-4xl max-md:text-3xl">Услуги</h1>
+    <section className="flex flex-col gap-20 max-md:gap-5 ">
+      <label className="align-self-center mx-auto" htmlFor="">
+        <h1 className="text-5xl font-bold max-xl:text-4xl max-md:text-3xl">
+          Услуги
+        </h1>
       </label>
 
+      <div className="max-w-sm mx-auto">
+        {userRole !== 'customer' && <AddServiceModal
+          mode={"create"}
+          type={userRole === "admin" ? "category" : "service"}
+        />}
+      </div>
       <div className="flex justify-self-center mx-auto justify-around min-w-3/4 gap-10 max-2xl:gap-5 max-xl:flex-col max-xl:items-center">
-        {categories.map((el, i) => (
-          <div key={el.id} className="min-h-[450px]">
-            <div className="flex flex-col flex-wrap border-gray-300 border rounded-2xl w-md  p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw]"  key={i}>
-                <p className="mx-auto text-2xl font-semibold">{el.name}</p>
-                {el.services.length > 0 &&
-                  el.services.map((service) => (
-
-                    <div key={service.title} className="flex gap-2 border rounded-xl p-4">
-                      <div className="flex flex-col">
-                        <p>{service.title}</p>
-                        <p>{service.description}</p>
-                      </div>
-                      <span>
-                        <p className="ml-auto">{`Цена: ${service.price} ₽`}</p>
-                        {userRole !== 'admin' && userRole !== 'notary'&& <Button size={'sm'} color="success">Заказать</Button>}
-                      </span>
-                    </div>
-                  ))
+        {categories.map((category, i) => (
+          <div key={category.id} className="min-h-[450px]">
+            
+            <div
+              className="flex flex-col flex-wrap border-gray-300 border rounded-2xl w-md  p-8 max-2xl:w-sm max-2xl:p-6 max-md:w-[90vw]"
+              key={i}
+            >
+              {userRole === 'admin' && 
+            <>
+              <AddServiceModal
+                type="category"
+                mode="edit"
+                initialData={{
+                  id: category.id,
+                  name: category.name,
+                  parent_id: category.parent_id
+                }}
+                trigger={
+                  <Button size="sm" color="warning">
+                    Изменить
+                  </Button>
                 }
-                <AddServiceModal name={el.name} parent_id={el.parent_id}/>
+              />
+              <Button
+                size="sm"
+                color="danger"
+                onPress={() => deleteCategories(category.id)}
+              >
+                Удалить
+              </Button>
+            </>}
+              <p className="mx-auto text-2xl font-semibold">{category.name}</p>
+              {category.services.length > 0 &&
+                category.services.map((service) => (
+                  <div
+                    key={service.title}
+                    className="flex gap-2 border rounded-xl p-4"
+                  >
+                    <div className="flex flex-col">
+                      <p>{service.title}</p>
+                      <p>{service.description}</p>
+                    </div>
+                    <span>
+                      <p className="ml-auto">{`Цена: ${service.price} ₽`}</p>
+                      {userRole !== "admin" && userRole !== "notary" && (
+                        <BookingForm
+                          serviceId={service.id}
+                          trigger={
+                            <Button size="sm" color="success">
+                              Заказать
+                            </Button>
+                          }
+                        />
+                      )}
+                      {userRole === "notary" && 
+                        <>
+                          <AddServiceModal
+                            type="service"
+                            mode="edit"
+                            initialData={{
+                              id: service.id,
+                              title: service.title,
+                              description: service.description,
+                              price: Number(service.price),
+                              category_id: service.category_id ?? null,
+                            }}
+                            trigger={
+                              <Button size="sm" color="warning">
+                                Изменить
+                              </Button>
+                            }
+                          />
+                          <Button
+                          size="sm"
+                          color="danger"
+                          onPress={async () => deleteService(service.id)}
+                        >
+                          Удалить
+                        </Button>
+                        </>
+                      }
+                      
+                    </span>
+                  </div>
+                ))}
             </div>
           </div>
         ))}

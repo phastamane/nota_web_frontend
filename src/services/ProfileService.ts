@@ -11,4 +11,8 @@ export default class ProfileService {
     return api.get<INotary>("notaries/me");
   }
 
+  // static getAllNotaries(){
+  //   return api.get()
+  // }
+
 }

@@ -50,7 +50,7 @@ export default function AdminAccount() {
         </div>
       </div>
 
-      <AddServicesCatForm />
+      <AddServicesCatForm mode={'create'}/>
     </div>
   );
 }
